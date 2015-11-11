@@ -1,5 +1,7 @@
 defmodule Issues.CLI do
 
+  import Issues.TableFormatter, only: [create_table_of_issues: 1]
+
   @default_count 4
 
   @moduledoc """
@@ -36,20 +38,16 @@ defmodule Issues.CLI do
     System.halt(0)
   end
 
-  def process({user, project, _count}) do
+  def process({user, project, count}) do
     Issues.GithubIssues.fetcher(user, project)
     |> decode_response
     |> convert_to_list_of_hashdicts
     |> sort_into_ascending_order
-  end
-
-  def sort_into_ascending_order(list_of_issues) do
-    Enum.sort list_of_issues,
-              fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
+    |> Enum.take(count) # Run mix test and see it thinks count is a function.
+    |> create_table_of_issues()
   end
 
   def decode_response({:ok, body}), do: body
-
   def decode_response({:error, error}) do
     {_, message} = List.keyfind(error, "message", 0)
     IO.puts "Error fetching from Github: #{message}"
@@ -59,5 +57,10 @@ defmodule Issues.CLI do
   def convert_to_list_of_hashdicts(list) do
     list
     |> Enum.map(&Enum.into(&1, HashDict.new))
+  end
+
+  def sort_into_ascending_order(list_of_issues) do
+    Enum.sort list_of_issues,
+              fn i1, i2 -> i1["created_at"] <= i2["created_at"] end
   end
 end

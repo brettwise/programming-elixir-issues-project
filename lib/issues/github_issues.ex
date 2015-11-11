@@ -2,7 +2,7 @@ defmodule Issues.GithubIssues do
 
   @user_agent [{"User-agent", "Elixir dave@pragprog.com"}]
 
-  def fetch(user, project) do
+  def fetcher(user, project) do
     issues_url(user, project)
     |> HTTPoison.get(@user_agent)
     |> handle_response
