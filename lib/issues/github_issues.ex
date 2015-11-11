@@ -20,7 +20,7 @@ defmodule Issues.GithubIssues do
   @github_url Application.get_env(:issues, :github_url)
 
   def issues_url(user, project) do
-    "https://api.github.com/repos/#{user}/#{project}/issues"
+    "#{@github_url}/repos/#{user}/#{project}/issues"
   end
 
 end
