@@ -40,18 +40,10 @@ defmodule Issues.CLI do
 
   def process({user, project, count}) do
     Issues.GithubIssues.fetcher(user, project)
-    |> decode_response
     |> convert_to_list_of_hashdicts
     |> sort_into_ascending_order
-    |> Enum.take(count) # Run mix test and see it thinks count is a function.
+    |> Enum.take(count)
     |> create_table_of_issues()
-  end
-
-  def decode_response({:ok, body}), do: body
-  def decode_response({:error, error}) do
-    {_, message} = List.keyfind(error, "message", 0)
-    IO.puts "Error fetching from Github: #{message}"
-    System.halt(2)
   end
 
   def convert_to_list_of_hashdicts(list) do
