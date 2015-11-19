@@ -30,7 +30,9 @@ defmodule Issues.Mixfile do
   defp deps do
     [
       {:httpoison, "~> 0.8.0"},
-      {:poison, "~> 1.5"}
+      {:poison, "~> 1.5"},
+      {:ex_doc, "~> 0.10.0"},
+      {:earmark, ">= 0.0.0"}
     ]
   end
 
